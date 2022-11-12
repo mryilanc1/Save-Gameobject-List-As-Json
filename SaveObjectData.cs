@@ -6,7 +6,7 @@ using UnityEngine;
 namespace Editor
 {
     public class SaveObjectData : EditorWindow
-    { 
+    {
         public ListObject Root = new ListObject();
         private SerializedObject m_SerializedObject;
         private Vector2 m_Scroll = Vector2.zero;
@@ -14,13 +14,13 @@ namespace Editor
         private string m_SaveName;
 
         [MenuItem("Tool/Object_Save_Editor")]
-        public static void ShowWindow ()
+        public static void ShowWindow()
         {
-            SaveObjectData window = (SaveObjectData) GetWindow(typeof (SaveObjectData), true, "Save Object Data Editor");
+            SaveObjectData window = (SaveObjectData) GetWindow(typeof(SaveObjectData), true, "Save Object Data Editor");
             window.Show();
         }
 
-        void OnGUI ()
+        void OnGUI()
         {
             EditorGUILayout.BeginVertical();
 
@@ -38,9 +38,15 @@ namespace Editor
 
             if (GUILayout.Button("Load Json", GUILayout.Height(50), GUILayout.MinWidth(160)))
             {
-                TextAsset json_yazi = new TextAsset(File.ReadAllText(Application.dataPath + "/" + m_SaveName + ".json"));
+                TextAsset json_yazi =
+                    new TextAsset(File.ReadAllText(Application.dataPath + "/" + m_SaveName + ".json"));
 
                 Root = JsonUtility.FromJson<ListObject>(json_yazi.text);
+            }
+            
+            if (GUILayout.Button("Parse Colliders", GUILayout.Height(50), GUILayout.MinWidth(160)))
+            {
+               ParseAllObjects();
             }
 
             EditorGUILayout.EndVertical();
@@ -51,7 +57,7 @@ namespace Editor
 
             ScriptableObject target = this;
             m_SerializedObject = new SerializedObject(target);
-            SerializedProperty stringsProperty = m_SerializedObject.FindProperty("root");
+            SerializedProperty stringsProperty = m_SerializedObject.FindProperty("Root");
             EditorGUILayout.PropertyField(stringsProperty, true); // True means show children
             m_SerializedObject.ApplyModifiedProperties();
 
@@ -59,7 +65,7 @@ namespace Editor
             EditorGUILayout.EndScrollView();
         }
 
-        private void ReadAllObjects ()
+        private void ReadAllObjects()
         {
             AllObject = Selection.activeGameObject.GetComponentsInChildren<Transform>();
             var count = AllObject.Length;
@@ -68,7 +74,7 @@ namespace Editor
             for (var i = 1; i < AllObject.Length + 1; i++)
             {
                 var obj = AllObject[i - 1];
-                EditorUtility.DisplayProgressBar("SaveAllObjectData.cs", "Reading all objects.", i / div);
+                EditorUtility.DisplayProgressBar("SaveAllObjectData.cs", "Reading all objects.", i / 100);
                 var b = a;
                 if (obj.TryGetComponent(out MeshCollider _))
                 {
@@ -81,6 +87,7 @@ namespace Editor
                         Root.ObjectList[a].MaterialName = renderer.sharedMaterial.name;
                         a++;
                     }
+
                     if (a == b)
                     {
                         a++;
@@ -98,6 +105,7 @@ namespace Editor
                         Root.ObjectList[a].MaterialName = renderer.sharedMaterial.name;
                         a++;
                     }
+
                     if (a == b)
                     {
                         a++;
@@ -116,6 +124,7 @@ namespace Editor
 
                         a++;
                     }
+
                     if (a == b)
                     {
                         a++;
@@ -133,6 +142,7 @@ namespace Editor
                         Root.ObjectList[a].MaterialName = renderer.sharedMaterial.name;
                         a++;
                     }
+
                     if (a == b)
                     {
                         a++;
@@ -159,6 +169,7 @@ namespace Editor
                         Root.ObjectList[a].MaterialName = renderer.sharedMaterial.name;
                         a++;
                     }
+
                     if (a == b)
                     {
                         a++;
@@ -180,5 +191,113 @@ namespace Editor
 
             EditorUtility.ClearProgressBar();
         }
+
+
+
+        private void ParseAllObjects()
+        {   AllObject = Selection.activeGameObject.GetComponentsInChildren<Transform>();
+            var count = Root.ObjectList.Count;
+            var div = count / 100;
+            var a = 0;
+            
+            /// for one start
+                
+            for (var i = 1; i < AllObject.Length + 1; i++)
+            {
+                var obj = AllObject[i - 1];
+//                EditorUtility.DisplayProgressBar("ParseAllObjectData.cs", "Parsing all objects.", i / div);
+                var b = a;
+                
+                
+            /// for two start
+                
+                for (var c = 1; c < Root.ObjectList.Count + 1; c++)
+                {
+                    var unit = Root.ObjectList[c - 1];
+//                EditorUtility.DisplayProgressBar("ParseAllObjectData.cs", "Parsing all objects.", i / div);
+                    
+                  
+
+                    if (obj.name == unit.ObjectName)
+                    {
+                        Debug.Log("for two start");
+                        switch (unit.ColliderName)
+                        {
+                            case "MeshCollider":
+                            {
+                                if (obj.TryGetComponent(out MeshCollider _meshCollider) == false)
+                                {
+                                    obj.gameObject.AddComponent<MeshCollider>();
+
+                                }
+
+                            }
+                                break;
+                            case "BoxCollider":
+                            {
+                                if (obj.TryGetComponent(out BoxCollider _boxCollider) == false)
+                                {
+                                    obj.gameObject.AddComponent<BoxCollider>();
+
+                                }
+
+                            }
+                                break;
+                            case "CapsuleCollider":
+                            {
+                                if (obj.TryGetComponent(out CapsuleCollider _boxCollider) == false)
+                                {
+                                    obj.gameObject.AddComponent<CapsuleCollider>();
+
+                                }
+
+                            }
+                                break;
+                            case "SphereCollider":
+                            {
+                                if (obj.TryGetComponent(out SphereCollider _boxCollider) == false)
+                                {
+                                    obj.gameObject.AddComponent<SphereCollider>();
+
+                                }
+
+                            }
+                                break;
+                            case "TerrainCollider":
+                            {
+                                if (obj.TryGetComponent(out TerrainCollider _boxCollider) == false)
+                                {
+                                    obj.gameObject.AddComponent<TerrainCollider>();
+
+                                }
+
+                            }
+                                break;
+                            case "WheelCollider":
+                            {
+                                if (obj.TryGetComponent(out WheelCollider _boxCollider) == false)
+                                {
+                                    obj.gameObject.AddComponent<WheelCollider>();
+
+                                }
+
+                            }
+                                break;
+
+                             
+                        } // switch
+                        Debug.Log("switch two start");
+                    }// for two
+                    
+                }// for one
+                Debug.Log("for one end");
+                a++;
+                Array.Clear(AllObject, 0, count);
+
+                EditorUtility.ClearProgressBar();
+            }
+
+        }
     }
+
 }
