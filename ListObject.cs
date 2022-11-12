@@ -6,6 +6,6 @@ namespace Editor
     [System.Serializable]
     public class ListObject
     {
-        public List<ObjectUnit> ObjectList = new ();
+       public List<ObjectUnit> ObjectList = new List<ObjectUnit>();
     }
 }
