@@ -38,9 +38,9 @@ namespace Editor
 
             if (GUILayout.Button("Load Json", GUILayout.Height(50), GUILayout.MinWidth(160)))
             {
-                TextAsset json_yazi =
-                    new TextAsset(File.ReadAllText(Application.dataPath + "/" + m_SaveName + ".json"));
-
+                TextAsset json_yazi = new TextAsset(File.ReadAllText(Application.dataPath + "/" + m_SaveName + ".json"));
+                
+                Root.ObjectList.Clear();
                 Root = JsonUtility.FromJson<ListObject>(json_yazi.text);
             }
             
@@ -67,6 +67,8 @@ namespace Editor
 
         private void ReadAllObjects()
         {
+            
+            Root.ObjectList.Clear();
             AllObject = Selection.activeGameObject.GetComponentsInChildren<Transform>();
             var count = AllObject.Length;
             var div = count / 100;
@@ -79,6 +81,8 @@ namespace Editor
                 if (obj.TryGetComponent(out MeshCollider _))
                 {
                     Root.ObjectList.Add(new ObjectUnit());
+                    
+                    Root.ObjectList[a].ObjectID = obj.GetInstanceID();
                     Root.ObjectList[a].ObjectName = obj.name;
                     Root.ObjectList[a].ColliderName = "MeshCollider";
                     Root.ObjectList[a].LayerName = LayerMask.LayerToName(obj.gameObject.layer);
@@ -96,7 +100,8 @@ namespace Editor
                 else if (obj.TryGetComponent(out BoxCollider _))
                 {
                     Root.ObjectList.Add(new ObjectUnit());
-
+                    
+                    Root.ObjectList[a].ObjectID = obj.GetInstanceID();
                     Root.ObjectList[a].ObjectName = obj.name;
                     Root.ObjectList[a].ColliderName = "BoxCollider";
                     Root.ObjectList[a].LayerName = LayerMask.LayerToName(obj.gameObject.layer);
@@ -114,7 +119,8 @@ namespace Editor
                 else if (obj.TryGetComponent(out CapsuleCollider _))
                 {
                     Root.ObjectList.Add(new ObjectUnit());
-
+                    
+                    Root.ObjectList[a].ObjectID = obj.GetInstanceID();
                     Root.ObjectList[a].ObjectName = obj.name;
                     Root.ObjectList[a].ColliderName = "CapsuleCollider";
                     Root.ObjectList[a].LayerName = LayerMask.LayerToName(obj.gameObject.layer);
@@ -134,6 +140,7 @@ namespace Editor
                 {
                     Root.ObjectList.Add(new ObjectUnit());
 
+                    Root.ObjectList[a].ObjectID = obj.GetInstanceID();
                     Root.ObjectList[a].ObjectName = obj.name;
                     Root.ObjectList[a].ColliderName = "SphereCollider";
                     Root.ObjectList[a].LayerName = LayerMask.LayerToName(obj.gameObject.layer);
@@ -152,6 +159,7 @@ namespace Editor
                 {
                     Root.ObjectList.Add(new ObjectUnit());
 
+                    Root.ObjectList[a].ObjectID = obj.GetInstanceID();
                     Root.ObjectList[a].ObjectName = obj.name;
                     Root.ObjectList[a].ColliderName = "TerrainCollider";
                     Root.ObjectList[a].LayerName = LayerMask.LayerToName(obj.gameObject.layer);
@@ -161,6 +169,7 @@ namespace Editor
                 {
                     Root.ObjectList.Add(new ObjectUnit());
 
+                    Root.ObjectList[a].ObjectID = obj.GetInstanceID();
                     Root.ObjectList[a].ObjectName = obj.name;
                     Root.ObjectList[a].ColliderName = "WheelCollider";
                     Root.ObjectList[a].LayerName = LayerMask.LayerToName(obj.gameObject.layer);
@@ -179,6 +188,7 @@ namespace Editor
                 {
                     Root.ObjectList.Add(new ObjectUnit());
 
+                    Root.ObjectList[a].ObjectID = obj.GetInstanceID();
                     Root.ObjectList[a].ObjectName = obj.name;
                     Root.ObjectList[a].MaterialName = renderer2.sharedMaterial.name;
                     Root.ObjectList[a].LayerName = LayerMask.LayerToName(obj.gameObject.layer);
@@ -215,10 +225,10 @@ namespace Editor
                 {
                     var unit = Root.ObjectList[c - 1];
 //                EditorUtility.DisplayProgressBar("ParseAllObjectData.cs", "Parsing all objects.", i / div);
-                    
-                  
+                    Debug.Log(obj.name + ":::"+unit.ObjectName);
+                    Debug.Log("for two if oncesi");
 
-                    if (obj.name == unit.ObjectName)
+                    if (obj.GetInstanceID() == unit.ObjectID)
                     {
                         Debug.Log("for two start");
                         switch (unit.ColliderName)
@@ -292,11 +302,12 @@ namespace Editor
                 }// for one
                 Debug.Log("for one end");
                 a++;
-                Array.Clear(AllObject, 0, count);
+                Debug.Log(a);
+             
 
-                EditorUtility.ClearProgressBar();
+              //  EditorUtility.ClearProgressBar();
             }
-
+            Array.Clear(AllObject, 0,  AllObject.Length  );
         }
     }
 
