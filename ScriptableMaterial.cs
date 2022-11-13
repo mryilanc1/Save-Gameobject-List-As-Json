@@ -5,5 +5,5 @@ using UnityEngine;
 public class ScriptableMaterial : ScriptableObject
 
 {
-    public Material[] Material;
+    public Material[] Materials;
 }
