@@ -73,6 +73,7 @@ namespace Editor
             var count = AllObject.Length;
             var div = count / 100;
             var a = 0;
+            var MatNo = 0;
             for (var i = 1; i < AllObject.Length + 1; i++)
             {
                 var obj = AllObject[i - 1];
@@ -88,7 +89,14 @@ namespace Editor
                     Root.ObjectList[a].LayerName = LayerMask.LayerToName(obj.gameObject.layer);
                     if (obj.TryGetComponent(out MeshRenderer renderer))
                     {
-                        Root.ObjectList[a].MaterialName = renderer.sharedMaterial.name;
+                        for (var z = 1; z < renderer.sharedMaterials.Length +1 ; z++)
+                        {
+                            var obj_mat = renderer.sharedMaterials[z-1 ];
+                            Root.ObjectList[a].Materials.Add(new MaterialUnit());
+                            Root.ObjectList[a].Materials[z-1].MaterialName = obj_mat.name;
+                            Root.ObjectList[a].Materials[z-1].MaterialID = obj_mat.GetInstanceID();
+                            
+                        } 
                         a++;
                     }
 
@@ -107,7 +115,14 @@ namespace Editor
                     Root.ObjectList[a].LayerName = LayerMask.LayerToName(obj.gameObject.layer);
                     if (obj.TryGetComponent(out MeshRenderer renderer))
                     {
-                        Root.ObjectList[a].MaterialName = renderer.sharedMaterial.name;
+                        for (var z = 1; z < renderer.sharedMaterials.Length +1 ; z++)
+                        {
+                            var obj_mat = renderer.sharedMaterials[z-1 ];
+                            Root.ObjectList[a].Materials.Add(new MaterialUnit());
+                            Root.ObjectList[a].Materials[z-1].MaterialName = obj_mat.name;
+                            Root.ObjectList[a].Materials[z-1].MaterialID = obj_mat.GetInstanceID();
+                            
+                        } 
                         a++;
                     }
 
@@ -126,8 +141,14 @@ namespace Editor
                     Root.ObjectList[a].LayerName = LayerMask.LayerToName(obj.gameObject.layer);
                     if (obj.TryGetComponent(out MeshRenderer renderer))
                     {
-                        Root.ObjectList[a].MaterialName = renderer.sharedMaterial.name;
-
+                        for (var z = 1; z < renderer.sharedMaterials.Length +1 ; z++)
+                        {
+                            var obj_mat = renderer.sharedMaterials[z-1 ];
+                            Root.ObjectList[a].Materials.Add(new MaterialUnit());
+                            Root.ObjectList[a].Materials[z-1].MaterialName = obj_mat.name;
+                            Root.ObjectList[a].Materials[z-1].MaterialID = obj_mat.GetInstanceID();
+                            
+                        } 
                         a++;
                     }
 
@@ -146,7 +167,14 @@ namespace Editor
                     Root.ObjectList[a].LayerName = LayerMask.LayerToName(obj.gameObject.layer);
                     if (obj.TryGetComponent(out MeshRenderer renderer))
                     {
-                        Root.ObjectList[a].MaterialName = renderer.sharedMaterial.name;
+                        for (var z = 1; z < renderer.sharedMaterials.Length +1 ; z++)
+                        {
+                            var obj_mat = renderer.sharedMaterials[z-1 ];
+                            Root.ObjectList[a].Materials.Add(new MaterialUnit());
+                            Root.ObjectList[a].Materials[z-1].MaterialName = obj_mat.name;
+                            Root.ObjectList[a].Materials[z-1].MaterialID = obj_mat.GetInstanceID();
+                            
+                        } 
                         a++;
                     }
 
@@ -173,9 +201,17 @@ namespace Editor
                     Root.ObjectList[a].ObjectName = obj.name;
                     Root.ObjectList[a].ColliderName = "WheelCollider";
                     Root.ObjectList[a].LayerName = LayerMask.LayerToName(obj.gameObject.layer);
+                    
                     if (obj.TryGetComponent(out MeshRenderer renderer))
                     {
-                        Root.ObjectList[a].MaterialName = renderer.sharedMaterial.name;
+                        for (var z = 1; z < renderer.sharedMaterials.Length +1 ; z++)
+                        {
+                            var obj_mat = renderer.sharedMaterials[z-1 ];
+                            Root.ObjectList[a].Materials.Add(new MaterialUnit());
+                            Root.ObjectList[a].Materials[z-1].MaterialName = obj_mat.name;
+                            Root.ObjectList[a].Materials[z-1].MaterialID = obj_mat.GetInstanceID();
+                            
+                        } 
                         a++;
                     }
 
@@ -190,10 +226,20 @@ namespace Editor
 
                     Root.ObjectList[a].ObjectID = obj.GetInstanceID();
                     Root.ObjectList[a].ObjectName = obj.name;
-                    Root.ObjectList[a].MaterialName = renderer2.sharedMaterial.name;
                     Root.ObjectList[a].LayerName = LayerMask.LayerToName(obj.gameObject.layer);
+                    
+                    
+                        for (var z = 1; z < renderer2.sharedMaterials.Length +1 ; z++)
+                        {
+                            var obj_mat = renderer2.sharedMaterials[z-1 ];
+                            Root.ObjectList[a].Materials.Add(new MaterialUnit());
+                            Root.ObjectList[a].Materials[z-1].MaterialName = obj_mat.name;
+                            Root.ObjectList[a].Materials[z-1].MaterialID = obj_mat.GetInstanceID();
+                            
+                        } 
+                        
+                        a++;
 
-                    a++;
                 }
             }
 
