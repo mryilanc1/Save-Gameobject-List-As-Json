@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEditor;
@@ -16,13 +17,13 @@ namespace Editor
         private ScriptableMaterial MaterialPool;
 
         [MenuItem("Tool/Object_Save_Editor")]
-        public static void ShowWindow()
+        public static void ShowWindow ()
         {
-            SaveObjectData window = (SaveObjectData) GetWindow(typeof(SaveObjectData), true, "Save Object Data Editor");
+            SaveObjectData window = (SaveObjectData) GetWindow(typeof (SaveObjectData), true, "Save Object Data Editor");
             window.Show();
         }
 
-        void OnGUI()
+        void OnGUI ()
         {
             EditorGUILayout.BeginVertical();
 
@@ -54,7 +55,7 @@ namespace Editor
 
             MaterialPool =
                 (ScriptableMaterial) EditorGUILayout.ObjectField("Materyaller", MaterialPool,
-                    typeof(ScriptableMaterial));
+                    typeof (ScriptableMaterial));
 
             EditorGUILayout.EndVertical();
 
@@ -72,7 +73,7 @@ namespace Editor
             EditorGUILayout.EndScrollView();
         }
 
-        private void ReadAllObjects()
+        private void ReadAllObjects ()
         {
             Root.ObjectList.Clear();
             AllObject = Selection.activeGameObject.GetComponentsInChildren<Transform>();
@@ -253,36 +254,16 @@ namespace Editor
         }
 
 
-        private void ParseAllObjects()
+        private void ParseAllObjects ()
         {
             AllObject = Selection.activeGameObject.GetComponentsInChildren<Transform>();
-            var count = Root.ObjectList.Count;
-            var div = count / 100;
-            var a = 0;
-            
 
-            /// for one start
-
-            for (var i = 1; i < AllObject.Length + 1; i++)
+            foreach (var obj in AllObject)
             {
-                var obj = AllObject[i - 1];
-//                EditorUtility.DisplayProgressBar("ParseAllObjectData.cs", "Parsing all objects.", i / div);
-                var b = a;
-                if(obj.TryGetComponent(out MeshRenderer renderer) == false)continue;
-                
-
-                /// for two start
-
-                for (var c = 1; c < Root.ObjectList.Count + 1; c++)
+                foreach (var unit in Root.ObjectList)
                 {
-                    var unit = Root.ObjectList[c - 1];
-//                EditorUtility.DisplayProgressBar("ParseAllObjectData.cs", "Parsing all objects.", i / div);
-               //     Debug.Log(obj.name + ":::" + unit.ObjectName);
-                    Debug.Log("for two if oncesi");
-
                     if (obj.GetInstanceID() == unit.ObjectID)
                     {
-                        Debug.Log("for two start");
                         switch (unit.ColliderName)
                         {
                             case "MeshCollider":
@@ -333,28 +314,23 @@ namespace Editor
                                 }
                             }
                                 break;
-                        } // switch 1 
-
-                        
-                        for (var d = 0; d < unit.Materials.Count; d++)
-                        {
-                            Debug.Log("for frsit or default" );
-                            renderer.sharedMaterials[d] =
-                                MaterialPool.Material.FirstOrDefault(x =>
-                                    x.GetInstanceID() == unit.Materials[d].MaterialID);
-                            Debug.Log("for frsit or default 2" );
                         }
 
-                        Debug.Log("switch two start");
-                    } // for two
-                } // for one
+                        if (obj.TryGetComponent(out MeshRenderer renderer))
+                        {
+                            bool isOK = false;
+                            var list = new List<Material>();
+                            for (var d = 0; d < unit.Materials.Count; d++)
+                            {
+                                var mat = MaterialPool.Materials.FirstOrDefault(x => x.GetInstanceID().Equals(unit.Materials[d].MaterialID));
+                                isOK = mat != null;
+                                if (isOK) list.Add(mat);
+                            }
 
-                Debug.Log("for one end");
-                a++;
-                Debug.Log(a);
-
-
-                //  EditorUtility.ClearProgressBar();
+                            if (isOK) renderer.sharedMaterials = list.ToArray();
+                        }
+                    }
+                }
             }
 
             Array.Clear(AllObject, 0, AllObject.Length);
